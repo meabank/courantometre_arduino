@@ -14,23 +14,26 @@
 #define DEBUG                     1                             //Activation du debug sur le port série vers le PC (mettre //devant la ligne si desactivation)
 
 #define COMPTEUR_1                1                             //Activation Capteur1 (mettre //devant la ligne si desactivation)
-#define CTR_1_PIN                 5                             /*Definition des numeros de pin*/
-#define SD_LED                    5
-#define PULSE_LED                 6                             /*(NE PAS TOUCHER : )          */
-#define TOR_PIN                   4
+//#define CAPTEUR_TOR               1                           //Activation Capteur Tout ou RIEN (mettre //devant la ligne si desactivation)
 
 #define CTR_1_PAS                 1                             //Nombre de pas du compte tours num 1
-
 #define COEFF_CAPT1               1/1                           //Coefficient de transmission entre le compte tours num 1 et l'objet a mesurer
-#define RX 7
-#define TX 8
-#define BAUD 9600
 
 #define NUMERO_1                  "+33770281556"                //assistance technique ---> "+33770281556" 
 #define NB_SEC_PAR_MINUTE         60
 #define NB_MIN_PAR_HEURE          60
 
 //////////////////////////////////////////////////////////////////////////////////////////////
+
+#define CTR_1_PIN                 5                             /*Definition des numeros de pin*/
+#define SD_LED                    2
+#define PULSE_LED                 6                             /*(NE PAS TOUCHER : )          */
+#define TOR_PIN                   4
+#define RX 7
+#define TX 8
+#define BAUD 9600
+
+
 static int tor_state =0;
 static int pinCS = 53;
 static int C1=0;
@@ -226,9 +229,11 @@ void SEC()
 				myFile.print(TR1);                            // changer tr1 pour TR1 pour appliquer le coefficient de reduction pour obtenir le nb tour de roue
 				myFile.print(";");
 				#endif
-				/*myFile.print("TOR;");
+        #ifdef CAPTEUR_TOR
+				myFile.print("TOR;");
 				myFile.print(tor_state);                            // afficher etat logique de la lecture TOR
-				myFile.print(";");*/
+				myFile.print(";");
+        #endif
 				myFile.close(); // close the file
         //digitalWrite(LED_BUILTIN, LOW);
 				
