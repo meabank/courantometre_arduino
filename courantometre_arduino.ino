@@ -26,6 +26,8 @@
 #define TX 8
 #define BAUD 9600
 
+#define NUMBER_1                  "+33770281556"
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 int tor_state =0;
 int pinCS = 53;
@@ -55,7 +57,7 @@ volatile float moy=0;
 float puiss = 0;
 double moteur=0.00;
 //String historique ="";
-char* number = "+33770281556";
+char* number;
 //char* historique_24h = "";
 char* historique_24h[24];
 char* historique_24h_1msg = "";
@@ -71,8 +73,9 @@ void SEC();
 
 void setup() 
 {
-
-
+  /*********************************/
+  number = NUMBER_1;
+  /*********************************/
   Serial.begin(115200);       //initialisation communication série vers PC
   delay (100);
   Serial.println("...");
