@@ -27,6 +27,8 @@
 #define BAUD 9600
 
 #define NUMBER_1                  "+33770281556"
+#define NB_SEC_PAR_MINUTE         60
+#define NB_MIN_PAR_HEURE          60
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 int tor_state =0;
@@ -208,12 +210,12 @@ void SEC()
 		//todo a modifier pour calcul moyenne TR1
 		moy = puiss+moy; //formule calcul  | puissance moyenne echantilloné tt les secondes
 		
-		if(sec == 60)
+		if(sec == NB_SEC_PAR_MINUTE)
 		{
 		  minutes = minutes + 1;
 		  sec = 0;
 	  
-		   if(minutes == 1)
+		   if(minutes == NB_MIN_PAR_HEURE)
 			{
 				minutes = 0;
 				heures = heures +1;  
