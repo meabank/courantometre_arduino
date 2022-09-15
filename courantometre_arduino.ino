@@ -159,10 +159,20 @@ void loop()
      }
  #endif
 
-      if(flag_sms){
-          Serial.println("debug flag sms...");
-          flag_sms = false;
-          #ifdef CAPTEUR_TOR
+
+    if(flag_gestion_histo){
+         Serial.println("debug flag histo...");
+         flag_gestion_histo = false;
+         //Gestion historique 24h
+         char message_1h[7];
+         index_historique = heures;
+         Serial.println("debug index histo...");
+         Serial.println(index_historique);
+              /*dtostrf(TR1, 3, 2, message_24h);  
+              //historique_24h[index_historique-1] = message_24h;
+              strcpy(historique_24h[index_historique-1], message_24h);*/
+
+            /*  #ifdef CAPTEUR_TOR
           char message_capteur[9];
           char etat_tor[2];
           String str;
@@ -178,21 +188,34 @@ void loop()
           strcat(message_capteur,";");
           #endif
           Serial.println(message_capteur);
-          //Serial.println(tor_state);
+          //Serial.println(tor_state);*/
+
+        TR1 = 0;
+
+        if(flag_sms){
+          Serial.println("debug flag sms...");
+          //flag_sms = false;
+          heures = 0;
+          char message_capteur[9];
           Serial.println("Envoi sms...");
           ////////
           //gsm.smsSend(number,message_capteur);
           ////////
+          //TODOOO
           if(!gsm.smsSend(number, message_capteur)){
             Serial.println("Echec envoi sms...");
+            flag_sms = false;
+          }else{
+            flag_sms = false;
           }
           //delay(2000);
           //Serial.println(gsm.smsSend(number, message_capteur)); // envoi par sms de message_capteur
           //todo essai
           //Serial.println(gsm.smsSend(number, print(TR1))); // envoi par sms de message_capteur
           //RAZ des variables...
-          TR1 = 0;
+          
       }
+    }
 
 }   
 
@@ -223,6 +246,8 @@ void SEC()
 
 				////////ECRITURE CARTE SD TT LES HEURES///////////////////////
 				moy = moy/3600;  //calcul final de la moyenne (division par 60sec)
+        Serial.println("");
+        Serial.println("");
 				Serial.println(heures);
 				Serial.println("Mesure...");
 				Serial.print(TR1);
@@ -257,17 +282,18 @@ void SEC()
 				myFile.close(); // close the file
         //digitalWrite(LED_BUILTIN, LOW);
 				
-				flag_sms = true;
-				//RAZ des compteurs pour la prochaine heure.                                       
+				flag_gestion_histo = true;
+				//RAZ des compteurs pour la prochaine heure.     
+        //TR1 = 0;                                  
 				tr1 = 0;
 				moy = 0;
 	  
-				/*if(heures == 24)
+				if(heures == 24)
 				{
 					index_historique = 0;
-					heures = 0;
-					jours = jours +1;            
-				}*/
+					jours = jours +1;     
+          flag_sms = true;       
+				}
 				
 			}
 	  
