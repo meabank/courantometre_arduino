@@ -14,7 +14,7 @@
 #define DEBUG                     1                             //Activation du debug sur le port série vers le PC (mettre //devant la ligne si desactivation)
 
 #define COMPTEUR_1                1                             //Activation Capteur1 (mettre //devant la ligne si desactivation)
-//#define CAPTEUR_TOR               1                           //Activation Capteur Tout ou RIEN (mettre //devant la ligne si desactivation)
+#define CAPTEUR_TOR               1                             //Activation Capteur Tout ou RIEN (mettre //devant la ligne si desactivation)
 
 #define CTR_1_PAS                 1                             //Nombre de pas du compte tours num 1
 #define COEFF_CAPT1               1/1                           //Coefficient de transmission entre le compte tours num 1 et l'objet a mesurer
@@ -93,13 +93,13 @@ void setup()
   // SD Card Initialization///////////////////////////////////////
   if (SD.begin())
   {
-      #ifdef DEBUG==1
+      #ifdef DEBUG
       Serial.println("La carte SD est prete a l'emploi");
       #endif
       digitalWrite(SD_LED, HIGH);
   } else
   {          
-    #ifdef DEBUG==1
+    #ifdef DEBUG
     Serial.println("l'initialisation de la carte sd a echouee");
     #endif
       return;
@@ -109,7 +109,7 @@ void setup()
           
   // if the file opened okay, write to it:                                                  //TODO WRITE THE CONF
   if (myFile) {
-      #ifdef DEBUG==1
+      #ifdef DEBUG
       Serial.println("Ecriture dans le fichier test.txt...");
       #endif
       
@@ -121,7 +121,7 @@ void setup()
   }
   // if the file didn't open, print an error:
   else {
-      #ifdef DEBUG==1
+      #ifdef DEBUG
       Serial.println("Erreur d'ouverture du fichier test.txt");
       #endif
       digitalWrite(SD_LED, LOW);
@@ -162,9 +162,23 @@ void loop()
       if(flag_sms){
           Serial.println("debug flag sms...");
           flag_sms = false;
+          #ifdef CAPTEUR_TOR
+          char message_capteur[9];
+          char etat_tor[2];
+          String str;
+          #else
           char message_capteur[7];
+          #endif
           dtostrf(TR1, 3, 2, message_capteur);             //insertion de la valeur capteur dans la chaine de caractère "message_capteur"
-          //Serial.println(message_capteur);
+          #ifdef CAPTEUR_TOR
+          str = String(tor_state);
+          str.toCharArray(etat_tor,2);
+          strcat(message_capteur,";");
+          strcat(message_capteur, etat_tor);
+          strcat(message_capteur,";");
+          #endif
+          Serial.println(message_capteur);
+          //Serial.println(tor_state);
           Serial.println("Envoi sms...");
           ////////
           //gsm.smsSend(number,message_capteur);
@@ -211,9 +225,14 @@ void SEC()
 				moy = moy/3600;  //calcul final de la moyenne (division par 60sec)
 				Serial.println(heures);
 				Serial.println("Mesure...");
-				Serial.println(";");
 				Serial.print(TR1);
+        Serial.println(";");
 				Serial.println("TOUR");
+        Serial.println(";");
+        Serial.print(tor_state);
+        Serial.println(";");
+        Serial.println("TOR");
+        
 
         //digitalWrite(LED_BUILTIN, HIGH);                     //todo test si fichier error et allumer led
 				myFile = SD.open("test.txt", FILE_WRITE);
