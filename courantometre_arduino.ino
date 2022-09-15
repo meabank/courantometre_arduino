@@ -50,7 +50,7 @@ volatile float moy=0;
 //String historique ="";
 char* number;
 //char* historique_24h = "";
-char* historique_24h[24];
+char historique_24h[24][9];
 char* historique_24h_1msg = "";
 //char* message_capteur = ""; //
 GSMSim gsm;
@@ -164,15 +164,12 @@ void loop()
          Serial.println("debug flag histo...");
          flag_gestion_histo = false;
          //Gestion historique 24h
-         char message_1h[7];
+         //char message_1h[7];
          index_historique = heures;
-         Serial.println("debug index histo...");
-         Serial.println(index_historique);
-              /*dtostrf(TR1, 3, 2, message_24h);  
-              //historique_24h[index_historique-1] = message_24h;
-              strcpy(historique_24h[index_historique-1], message_24h);*/
+         /*Serial.println("debug index histo...");
+         Serial.println(index_historique);*/
 
-            /*  #ifdef CAPTEUR_TOR
+          #ifdef CAPTEUR_TOR
           char message_capteur[9];
           char etat_tor[2];
           String str;
@@ -187,8 +184,15 @@ void loop()
           strcat(message_capteur, etat_tor);
           strcat(message_capteur,";");
           #endif
-          Serial.println(message_capteur);
-          //Serial.println(tor_state);*/
+          /*Serial.println("debug message capteur");
+          Serial.println(message_capteur);*/
+          /*Serial.println("debug sizeof");
+          Serial.println(sizeof(message_capteur));*/
+          for(int i=0; i<sizeof(message_capteur);i++){
+            historique_24h[index_historique-1][i] = message_capteur[i];
+          }
+          
+          Serial.println(historique_24h[index_historique-1]);     
 
         TR1 = 0;
 
@@ -196,13 +200,17 @@ void loop()
           Serial.println("debug flag sms...");
           //flag_sms = false;
           heures = 0;
-          char message_capteur[9];
+          historique_24h_1msg = "";
+          for(int i=0; i<24;i++){
+            strcat(historique_24h_1msg, historique_24h[i]);
+            strcat(historique_24h_1msg, "'\n'");
+            //Serial.println(historique_24h[i]);
+          }
+          //Serial.println("historique_24h_1msg");
+          
+
           Serial.println("Envoi sms...");
-          ////////
-          //gsm.smsSend(number,message_capteur);
-          ////////
-          //TODOOO
-          if(!gsm.smsSend(number, message_capteur)){
+          if(!gsm.smsSend(number, historique_24h_1msg)){
             Serial.println("Echec envoi sms...");
             flag_sms = false;
           }else{
@@ -249,14 +257,14 @@ void SEC()
         Serial.println("");
         Serial.println("");
 				Serial.println(heures);
-				Serial.println("Mesure...");
+				/*Serial.println("Mesure...");
 				Serial.print(TR1);
         Serial.println(";");
 				Serial.println("TOUR");
         Serial.println(";");
         Serial.print(tor_state);
         Serial.println(";");
-        Serial.println("TOR");
+        Serial.println("TOR");*/
         
 
         //digitalWrite(LED_BUILTIN, HIGH);                     //todo test si fichier error et allumer led
