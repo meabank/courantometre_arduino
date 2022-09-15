@@ -81,14 +81,14 @@ void setup()
   Serial.println("...");
   delay (10000);
 
-  Serial.println("GSM Start...");
+  Serial.println("GStart GSM...");
   gsm.start(); // baud default 9600
   
-  Serial.println("Changing to text mode.");
+  Serial.println("Changement en mode texte...");
   if(!gsm.smsTextMode(true)){ // TEXT or PDU mode. TEXT is readable :)
        Serial.println("echec");
   }
-  Serial.println("Sending Message --->");
+  Serial.println("Envoi SMS de test --->");
   Serial.println(gsm.smsSend(number, "test sms courantometre peba")); // if success it returns true (1) else false (0)
   delay(2000);
   
@@ -103,13 +103,13 @@ void setup()
   if (SD.begin())
   {
       #ifdef DEBUG==1
-      Serial.println("SD card is ready to use.");
+      Serial.println("La carte SD est prete a l'emploi");
       #endif
       digitalWrite(SD_LED, HIGH);
   } else
   {          
     #ifdef DEBUG==1
-    Serial.println("SD card initialization failed");
+    Serial.println("l'initialisation de la carte sd a echouee");
     #endif
       return;
   }
@@ -119,7 +119,7 @@ void setup()
   // if the file opened okay, write to it:                                                  //TODO WRITE THE CONF
   if (myFile) {
       #ifdef DEBUG==1
-      Serial.println("Writing to test.txt...");
+      Serial.println("Ecriture dans le fichier test.txt...");
       #endif
       
       // Write to file
@@ -131,7 +131,7 @@ void setup()
   // if the file didn't open, print an error:
   else {
       #ifdef DEBUG==1
-      Serial.println("error opening test.txt");
+      Serial.println("Erreur d'ouverture du fichier test.txt");
       #endif
       digitalWrite(SD_LED, LOW);
   }
