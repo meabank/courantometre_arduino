@@ -203,12 +203,9 @@ void SEC()
 {
   //TODO if flag == false //pour attendre la fin du sms avant de recompter
   if(flag_sms == false){
-	  
-		digitalWrite(PULSE_LED, HIGH);
+    
 		//tor_state = digitalRead(TOR_PIN);
 		sec = sec +1;
-		//todo a modifier pour calcul moyenne TR1
-		moy = puiss+moy; //formule calcul  | puissance moyenne echantilloné tt les secondes
 		
 		if(sec == NB_SEC_PAR_MINUTE)
 		{
@@ -227,8 +224,9 @@ void SEC()
 				Serial.println(";");
 				Serial.print(TR1);
 				Serial.println("TOUR");
+
+        //digitalWrite(LED_BUILTIN, HIGH);                     //todo test si fichier error et allumer led
 				myFile = SD.open("test.txt", FILE_WRITE);
-				digitalWrite(LED_BUILTIN, HIGH);                     //todo test si fichier error et allumer led
 				myFile.println();
 				myFile.print(heures);
 				myFile.print("H");
@@ -237,7 +235,6 @@ void SEC()
 				myFile.print(sec);
 				myFile.print("s");
 				myFile.print(";");
-				//myFile.print("Capteur1 (pales)(tr/min) = ;");
 				#ifdef COMPTEUR_1
 				myFile.print("compteur1;");
 				myFile.print(TR1);                            // changer tr1 pour TR1 pour appliquer le coefficient de reduction pour obtenir le nb tour de roue
@@ -247,19 +244,10 @@ void SEC()
 				myFile.print(tor_state);                            // afficher etat logique de la lecture TOR
 				myFile.print(";");*/
 				myFile.close(); // close the file
-
-				//Gestion historique 24h
-				flag_gestion_histo = true;
-				/* char message_24h[7];
-				index_historique = heures;
-				dtostrf(TR1, 3, 2, message_24h);  
-				//historique_24h[index_historique-1] = message_24h;
-				strcpy(historique_24h[index_historique-1], message_24h);*/
-	  
-				digitalWrite(LED_BUILTIN, LOW);
+        //digitalWrite(LED_BUILTIN, LOW);
+				
 				flag_sms = true;
 				//RAZ des compteurs pour la prochaine heure.                                       
-				//TR1 = 0;  //!!! commenter si sms en mode heure et pas jour... deplacer ici le flag_sms "flag_sms = true;"
 				tr1 = 0;
 				tr2 = 0;
 				moy = 0;
@@ -273,8 +261,6 @@ void SEC()
 				}*/
 				
 			}
-			
-			digitalWrite(PULSE_LED, LOW);
 	  
 		}
 	}else
