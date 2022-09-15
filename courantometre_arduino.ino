@@ -198,112 +198,82 @@ void SEC()
 {
   //TODO if flag == false //pour attendre la fin du sms avant de recompter
   if(flag_sms == false){
-    digitalWrite(PULSE_LED, HIGH);
-    //tor_state = digitalRead(TOR_PIN);
-    sec = sec +1;
-    //todo a modifier pour calcul moyenne TR1
-    moy = puiss+moy; //formule calcul  | puissance moyenne echantilloné tt les secondes
-    if(sec == 60)
-      {
-      minutes = minutes + 1;
-      sec = 0;
-  
-       if(minutes == 1)
-        {
-          minutes = 0;
-          heures = heures +1;  
+	  
+		digitalWrite(PULSE_LED, HIGH);
+		//tor_state = digitalRead(TOR_PIN);
+		sec = sec +1;
+		//todo a modifier pour calcul moyenne TR1
+		moy = puiss+moy; //formule calcul  | puissance moyenne echantilloné tt les secondes
+		
+		if(sec == 60)
+		{
+		  minutes = minutes + 1;
+		  sec = 0;
+	  
+		   if(minutes == 1)
+			{
+				minutes = 0;
+				heures = heures +1;  
 
-      ////////////////////////////ECRITURE CARTE SD TT LES MINUTES///////////////////////////
-              moy = moy/3600;  //calcul final de la moyenne (division par 60sec)
-              Serial.println(heures);
-              Serial.println("Mesure...");
-              Serial.println(";");
-              Serial.print(TR1);
-              Serial.println("TOUR");
-              myFile = SD.open("test.txt", FILE_WRITE);
-              digitalWrite(LED_BUILTIN, HIGH);                     //todo test si fichier error et allumer led
-              myFile.println();
-              myFile.print(heures);
-              myFile.print("H");
-              myFile.print(minutes);
-              myFile.print("min");
-              myFile.print(sec);
-              myFile.print("s");
-              myFile.print(";");
-              //myFile.print("Capteur1 (pales)(tr/min) = ;");
-              #ifdef COMPTEUR_1
-              myFile.print("compteur1;");
-              myFile.print(TR1);                            // changer tr1 pour TR1 pour appliquer le coefficient de reduction pour obtenir le nb tour de roue
-              myFile.print(";");
-              #endif
-              /*myFile.print("TOR;");
-              myFile.print(tor_state);                            // afficher etat logique de la lecture TOR
-              myFile.print(";");*/
-              myFile.close(); // close the file
+				////////ECRITURE CARTE SD TT LES MINUTES///////////////////////
+				moy = moy/3600;  //calcul final de la moyenne (division par 60sec)
+				Serial.println(heures);
+				Serial.println("Mesure...");
+				Serial.println(";");
+				Serial.print(TR1);
+				Serial.println("TOUR");
+				myFile = SD.open("test.txt", FILE_WRITE);
+				digitalWrite(LED_BUILTIN, HIGH);                     //todo test si fichier error et allumer led
+				myFile.println();
+				myFile.print(heures);
+				myFile.print("H");
+				myFile.print(minutes);
+				myFile.print("min");
+				myFile.print(sec);
+				myFile.print("s");
+				myFile.print(";");
+				//myFile.print("Capteur1 (pales)(tr/min) = ;");
+				#ifdef COMPTEUR_1
+				myFile.print("compteur1;");
+				myFile.print(TR1);                            // changer tr1 pour TR1 pour appliquer le coefficient de reduction pour obtenir le nb tour de roue
+				myFile.print(";");
+				#endif
+				/*myFile.print("TOR;");
+				myFile.print(tor_state);                            // afficher etat logique de la lecture TOR
+				myFile.print(";");*/
+				myFile.close(); // close the file
 
-              //Gestion historique 24h
-              flag_gestion_histo = true;
-             /* char message_24h[7];
-              index_historique = heures;
-              dtostrf(TR1, 3, 2, message_24h);  
-              //historique_24h[index_historique-1] = message_24h;
-              strcpy(historique_24h[index_historique-1], message_24h);*/
-  
-              digitalWrite(LED_BUILTIN, LOW);
-              flag_sms = true;
-              //RAZ des compteurs pour la prochaine heure.                                       
-              //TR1 = 0;  //!!! commenter si sms en mode heure et pas jour... deplacer ici le flag_sms "flag_sms = true;"
-              tr1 = 0;
-              tr2 = 0;
-              moy = 0;
-              moteur = 0;
-  
-              if(heures == 24)
-              {
-                    index_historique = 0;
-                    heures = 0;
-                    jours = jours +1;
-                    //maj du flag pour dire au module gsm denvoyer un sms
-                   // flag_sms = true;
-                    //extraction de l'historique des dernières 24h
-                   // myFile = SD.open("test.txt", FILE_READ); 
-                    //for(int i=0;i<24;i++){
-                    //if(myFile.seek(myFile.size()-i-1)){
-                    //myFile.read(buf,)
-                    //myFile.seek(0);
-                    
-                  /*  char buff = 0;
-                    //while(buff != -1){//ou nb_line == 24
-                      //si buff == '\n' alors nb_line ++;
-                      buff = myFile.read();
-                      historique_24h = "bonjour";
-                      buff = 'M';
-                      strcat(historique_24h, buff);
-                      //historique_24h = historique_24h + buff;
-                   // }*/
-                   /* historique_24h[0] = "H1";
-                    historique_24h[1] = "H2";
-                    historique_24h[2] = "H3";
-                    historique_24h[3] = "H4";
-                    historique_24h[4] = "H5";
-                    historique_24h[5] = "H6";
-                    historique_24h[6] = "H7";
-                    historique_24h[7] = "H8";*/
-                    
-                    //historique_24h
-                  //  myFile.close(); // close the file
-                  /*  Serial.println("debug myfile read...");
-                    for(int i=0; i<24;i++){
-                      Serial.println(historique_24h[i]);
-                    }*/
-                    
-              
-              }
-        }
-      digitalWrite(PULSE_LED, LOW);
-  
-    }
-  }else{
-    Serial.println("attente fin envoi sms avant mesure...");
-  }
+				//Gestion historique 24h
+				flag_gestion_histo = true;
+				/* char message_24h[7];
+				index_historique = heures;
+				dtostrf(TR1, 3, 2, message_24h);  
+				//historique_24h[index_historique-1] = message_24h;
+				strcpy(historique_24h[index_historique-1], message_24h);*/
+	  
+				digitalWrite(LED_BUILTIN, LOW);
+				flag_sms = true;
+				//RAZ des compteurs pour la prochaine heure.                                       
+				//TR1 = 0;  //!!! commenter si sms en mode heure et pas jour... deplacer ici le flag_sms "flag_sms = true;"
+				tr1 = 0;
+				tr2 = 0;
+				moy = 0;
+				moteur = 0;
+	  
+				/*if(heures == 24)
+				{
+					index_historique = 0;
+					heures = 0;
+					jours = jours +1;            
+				}*/
+				
+			}
+			
+			digitalWrite(PULSE_LED, LOW);
+	  
+		}
+	}else
+	{
+		Serial.println("attente fin envoi sms avant mesure...");
+	}
 }
