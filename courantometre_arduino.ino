@@ -192,8 +192,9 @@ void SEC()
 {
   //TODO if flag == false //pour attendre la fin du sms avant de recompter
   if(flag_sms == false){
-    
-		//tor_state = digitalRead(TOR_PIN);
+    #ifdef CAPTEUR_TOR
+		tor_state = digitalRead(TOR_PIN);
+    #endif
 		sec = sec +1;
 		
 		if(sec == NB_SEC_PAR_MINUTE)
@@ -206,7 +207,7 @@ void SEC()
 				minutes = 0;
 				heures = heures +1;  
 
-				////////ECRITURE CARTE SD TT LES MINUTES///////////////////////
+				////////ECRITURE CARTE SD TT LES HEURES///////////////////////
 				moy = moy/3600;  //calcul final de la moyenne (division par 60sec)
 				Serial.println(heures);
 				Serial.println("Mesure...");
