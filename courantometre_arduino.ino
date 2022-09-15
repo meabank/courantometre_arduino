@@ -165,37 +165,19 @@ void loop()
      }
  #endif
 
-if(flag_gestion_histo){
-              Serial.println("debug flag histo...");
-              flag_gestion_histo = false;
-              //Gestion historique 24h
-              char message_24h[7];
-              index_historique = heures;
-              dtostrf(TR1, 3, 2, message_24h);  
-              //historique_24h[index_historique-1] = message_24h;
-              strcpy(historique_24h[index_historique-1], message_24h);
-  
       if(flag_sms){
-          historique_24h_1msg = "";
-          //Serial.println("debug flag sms...");
+          Serial.println("debug flag sms...");
           flag_sms = false;
-          /*char message_capteur[7];
-          dtostrf(TR1, 3, 2, message_capteur); */            //insertion de la valeur capteur dans la chaine de caractère "message_capteur"
+          char message_capteur[7];
+          dtostrf(TR1, 3, 2, message_capteur);             //insertion de la valeur capteur dans la chaine de caractère "message_capteur"
           //Serial.println(message_capteur);
-          Serial.println("Debug 24h...");
-          for(int i=0; i<24;i++){
-            //strcat(historique_24h[i],";");
-            strcat(historique_24h_1msg, historique_24h[i]);
-            //Serial.println(historique_24h[i]);
-          }
-          
           Serial.println("Envoi sms...");
           ////////
-          //gsm.smsSend(number,historique_24h_1msg);
+          //gsm.smsSend(number,message_capteur);
           ////////
-        /*  if(!gsm.smsSend(number, message_capteur)){
+          if(!gsm.smsSend(number, message_capteur)){
             Serial.println("Echec envoi sms...");
-          }*/
+          }
           //delay(2000);
           //Serial.println(gsm.smsSend(number, message_capteur)); // envoi par sms de message_capteur
           //todo essai
@@ -203,7 +185,7 @@ if(flag_gestion_histo){
           //RAZ des variables...
           TR1 = 0;
       }
-  }
+
 }   
 
 ///////////////////////////////////FIN MAIN/////////////////////////////
@@ -221,12 +203,12 @@ void SEC()
     sec = sec +1;
     //todo a modifier pour calcul moyenne TR1
     moy = puiss+moy; //formule calcul  | puissance moyenne echantilloné tt les secondes
-    if(sec == 1)
+    if(sec == 60)
       {
       minutes = minutes + 1;
       sec = 0;
   
-       if(minutes == 2)
+       if(minutes == 1)
         {
           minutes = 0;
           heures = heures +1;  
@@ -268,9 +250,9 @@ void SEC()
               strcpy(historique_24h[index_historique-1], message_24h);*/
   
               digitalWrite(LED_BUILTIN, LOW);
-              
+              flag_sms = true;
               //RAZ des compteurs pour la prochaine heure.                                       
-              TR1 = 0;  //!!! commenter si sms en mode heure et pas jour... deplacer ici le flag_sms "flag_sms = true;"
+              //TR1 = 0;  //!!! commenter si sms en mode heure et pas jour... deplacer ici le flag_sms "flag_sms = true;"
               tr1 = 0;
               tr2 = 0;
               moy = 0;
@@ -282,7 +264,7 @@ void SEC()
                     heures = 0;
                     jours = jours +1;
                     //maj du flag pour dire au module gsm denvoyer un sms
-                    flag_sms = true;
+                   // flag_sms = true;
                     //extraction de l'historique des dernières 24h
                    // myFile = SD.open("test.txt", FILE_READ); 
                     //for(int i=0;i<24;i++){
