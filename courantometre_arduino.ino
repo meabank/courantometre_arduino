@@ -11,53 +11,39 @@
 #include <AVR_RTC.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-#define DEBUG                     1                                       //Activation du debug sur le port série vers le PC (mettre //devant la ligne si desactivation)
+#define DEBUG                     1                             //Activation du debug sur le port série vers le PC (mettre //devant la ligne si desactivation)
 
-#define COMPTEUR_1                1                                       //Activation Capteur1 (mettre //devant la ligne si desactivation)
-#define CTR_1_PIN                 5                                      /*Definition des numeros de pin*/
+#define COMPTEUR_1                1                             //Activation Capteur1 (mettre //devant la ligne si desactivation)
+#define CTR_1_PIN                 5                             /*Definition des numeros de pin*/
 #define SD_LED                    5
-#define PULSE_LED                 6                                      /*(NE PAS TOUCHER : )          */
+#define PULSE_LED                 6                             /*(NE PAS TOUCHER : )          */
 #define TOR_PIN                   4
 
-#define CTR_1_PAS                 1                                       //Nombre de pas du compte tours num 1
+#define CTR_1_PAS                 1                             //Nombre de pas du compte tours num 1
 
-#define COEFF_CAPT1               1/1                            //Coefficient de transmission entre le compte tours num 1 et l'objet a mesurer
+#define COEFF_CAPT1               1/1                           //Coefficient de transmission entre le compte tours num 1 et l'objet a mesurer
 #define RX 7
 #define TX 8
 #define BAUD 9600
 
-#define NUMBER_1                  "+33770281556"
+#define NUMERO_1                  "+33770281556"                //assistance technique ---> "+33770281556" 
 #define NB_SEC_PAR_MINUTE         60
 #define NB_MIN_PAR_HEURE          60
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-int tor_state =0;
-int pinCS = 53;
-int C1=0;
-int E1=0;
-long int Ctr1=0;
+static int tor_state =0;
+static int pinCS = 53;
+static int C1=0;
+static int E1=0;
+static long int Ctr1=0;
 volatile double tr1=0.00;
 volatile double TR1=0.00;
-int C2=0;
-int E2=0;
-long int Ctr2=0;
-volatile double tr2=0.00;
-volatile double TR2=0.00;
-int C3=0;
-int E3=0;
-long int Ctr3=0;
-volatile double tr3=0.00;
-volatile double TR3=0.00;
-int can=0;
 volatile float val=0;
-int Vcapt = 0;
 volatile int sec=0;
 volatile int minutes = 0;
 volatile int jours = 0;
 volatile long int heures = 0;
 volatile float moy=0;
-float puiss = 0;
-double moteur=0.00;
 //String historique ="";
 char* number;
 //char* historique_24h = "";
@@ -76,14 +62,14 @@ void SEC();
 void setup() 
 {
   /*********************************/
-  number = NUMBER_1;
+  number = NUMERO_1;
   /*********************************/
   Serial.begin(115200);       //initialisation communication série vers PC
   delay (100);
   Serial.println("...");
-  delay (10000);
+  delay (10000);              //tempo pour attente allumage module GSM
 
-  Serial.println("GStart GSM...");
+  Serial.println("Start GSM...");
   gsm.start(); // baud default 9600
   
   Serial.println("Changement en mode texte...");
@@ -249,9 +235,7 @@ void SEC()
 				flag_sms = true;
 				//RAZ des compteurs pour la prochaine heure.                                       
 				tr1 = 0;
-				tr2 = 0;
 				moy = 0;
-				moteur = 0;
 	  
 				/*if(heures == 24)
 				{
