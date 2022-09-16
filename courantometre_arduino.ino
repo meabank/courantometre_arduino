@@ -14,14 +14,15 @@
 #define DEBUG                     1                             //Activation du debug sur le port série vers le PC (mettre //devant la ligne si desactivation)
 
 #define COMPTEUR_1                1                             //Activation Capteur1 (mettre //devant la ligne si desactivation)
-#define CAPTEUR_TOR               1                             //Activation Capteur Tout ou RIEN (mettre //devant la ligne si desactivation)
+//#define CAPTEUR_TOR               1                             //Activation Capteur Tout ou RIEN (mettre //devant la ligne si desactivation)
 
 #define CTR_1_PAS                 1                             //Nombre de pas du compte tours num 1
 #define COEFF_CAPT1               53/1000                           //Coefficient de conversion entre les tours et la vitesse de l'eau
 
-#define NUMERO_1                  "+33770281556"                //assistance technique ---> "+33770281556" 
+#define NUMERO_1                  "+33612235255"                //assistance technique ---> "+33770281556" 
 #define NB_SEC_PAR_MINUTE         60
 #define NB_MIN_PAR_HEURE          60
+#define NB_H_PAR_JOUR             24             
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -260,17 +261,20 @@ void SEC()
 				myFile.close(); // close the file
         //digitalWrite(LED_BUILTIN, LOW);
 				
-				flag_sms = true;
+				
 				//RAZ des compteurs pour la prochaine heure.                                       
 				tr1 = 0;
 				moy = 0;
 	  
-				/*if(heures == 24)
+				if(heures == 24)
 				{
+          flag_sms = true;
 					index_historique = 0;
 					heures = 0;
 					jours = jours +1;            
-				}*/
+				}else{
+          TR1 = 0;
+				}
 				
 			}
 	  
