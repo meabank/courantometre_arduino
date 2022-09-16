@@ -17,7 +17,7 @@
 #define CAPTEUR_TOR               1                             //Activation Capteur Tout ou RIEN (mettre //devant la ligne si desactivation)
 
 #define CTR_1_PAS                 1                             //Nombre de pas du compte tours num 1
-#define COEFF_CAPT1               1/1                           //Coefficient de transmission entre le compte tours num 1 et l'objet a mesurer
+#define COEFF_CAPT1               53/1000                           //Coefficient de conversion entre les tours et la vitesse de l'eau
 
 #define NUMERO_1                  "+33770281556"                //assistance technique ---> "+33770281556" 
 #define NB_SEC_PAR_MINUTE         60
@@ -41,6 +41,7 @@ static int E1=0;
 static long int Ctr1=0;
 volatile double tr1=0.00;
 volatile double TR1=0.00;
+volatile double vitesse_eau=0.00;
 volatile float val=0;
 volatile int sec=0;
 volatile int minutes = 0;
@@ -169,7 +170,9 @@ void loop()
           #else
           char message_capteur[7];
           #endif
-          dtostrf(TR1, 3, 2, message_capteur);             //insertion de la valeur capteur dans la chaine de caractère "message_capteur"
+          vitesse_eau = (TR1*COEFF_CAPT1)/(NB_SEC_PAR_MINUTE*NB_MIN_PAR_HEURE);
+          Serial.println(vitesse_eau);
+          dtostrf(vitesse_eau, 3, 2, message_capteur);             //insertion de la valeur capteur dans la chaine de caractère "message_capteur"
           #ifdef CAPTEUR_TOR
           str = String(tor_state);
           str.toCharArray(etat_tor,2);
